@@ -1,0 +1,43 @@
+services:
+  ollama:
+    image: ollama/ollama
+    container_name: ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ./ollama-data:/root/.ollama
+    restart: unless-stopped
+    
+  timescale-vector:
+    image: timescale/timescaledb:latest-pg17 
+    container_name: timescale-vector
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: mysecretpassword
+      POSTGRES_USER: rag_user
+      POSTGRES_DB: knowledge_db
+    volumes:
+      - ./timescale-data:/var/lib/postgresql/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U rag_user -d knowledge_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      
+  open-webui:
+    image: ghcr.io/open-webui/open-webui:main
+    container_name: open-webui
+    ports:
+      - "3000:8080"
+    environment:
+      - OLLAMA_BASE_URL=http://ollama:11434
+    volumes:
+      - ./open-webui-data:/app/backend/data
+    depends_on:
+      timescale-vector:
+        condition: service_healthy
+      ollama:
+        condition: service_started
+    restart: unless-stopped
