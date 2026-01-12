@@ -48,7 +48,7 @@ All components run locally in containers and are completely private and offline-
 
 ## Final Architecture
 
-![Private Local RAG Architecture](./rag_architecture4.jpg)
+![Private Local RAG Architecture](./images/rag_architecture4.jpg)
 
 Architecural components:
 | Component                              | Role                                                                                           | How it is used in this guide                                      |
@@ -284,7 +284,7 @@ Add API keys for security: `api-key "yoursecret"`.
   - Vale-MCP Server Tool
     URL: http://host.docker.internal:8002
 * Create a model → configure it as in this example:
-![Open WebUI Model config example](./open_webui_model_config_example.png)
+![Open WebUI Model config example](./images/open_webui_model_config_example.png)
 * Chat: Enable tools via + integrations icon
 
   → remember to use best practice in prompting
